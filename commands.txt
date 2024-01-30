@@ -1,0 +1,28 @@
+k3d cluster create argocd-cluster --config ./cluster-config.yaml
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+kubectl -n argocd get deployment
+kubectl -n argocd get services
+kubectl -n argocd get statefulset
+argocd version --client
+kubectl -argocd get all
+kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "NodePort"}}' #To expose service to external services
+kubectl port-forward svc/argocd-server -n argocd 8080:443
+kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d && echo #Get argocd default password
+
+kubectl config get-contexts -o name
+#change admin password argo cd
+
+Get local ip address
+IP=`ifconfig | grep "inet " | grep -Fv 127.0.0.1 | awk '{print $2}'`
+192.168.18.8
+
+development cluster
+k3d cluster create loony-dev-cluster  --config ./dev-cluster-config.yaml
+kubectl cluster-info
+update ~/.kube/config to use external ip in new dev cluster
+
+switch contexts
+kubectl config use-context k3d-argocd-cluster
+
+Production cluster
+
